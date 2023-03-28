@@ -30,13 +30,32 @@ const DUMMY_MEETUPS = [
   },
 ];
 
-const HomePage = () => {
+const HomePage = (props) => {
+ 
   return (
     <>
       <h1>Home Page</h1>
-      <MeetupList meetups={DUMMY_MEETUPS} />
+      <MeetupList meetups={props.meetups} />
     </>
   );
 };
+
+export function getStaticProps() {
+    return {
+        props: {
+            meetups: DUMMY_MEETUPS
+        },
+    }
+}
+
+// export const getServerSideProps = (context) => {
+//     const req = context.req;
+//     const res = context.res;
+//     return {
+//         props: {
+//             meetups: DUMMY_MEETUPS
+//         }
+//     }
+// }
 
 export default HomePage;
