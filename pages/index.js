@@ -41,14 +41,29 @@ const HomePage = (props) => {
   );
 };
 
-export function getStaticProps() {
+export async function getStaticProps() {
 
+    const client = await MongoClient.connect(
+        'mongodb+srv://ajquidasol615:AjaBoy615@cluster0.03hsvqo.mongodb.net/meetups?retryWrites=true&w=majority'
+      );
+      const db = client.db();
+
+      const meetupsCollection = db.collection('meetups');
     
+    const meetups = await meetupsCollection.find().toArray();
+    
+    client.close();
 
     return {
         props: {
-            meetups: DUMMY_MEETUPS
+            meetups: meetups.map((meetup) => ({
+                title: meetup.data.title,
+                address: meetup.data.address,
+                image: meetup.data.image,
+                id: meetup._id.toString(),
+            }))
         },
+        revalidate: 10,
     }
 }
 
