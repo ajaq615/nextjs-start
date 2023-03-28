@@ -1,3 +1,4 @@
+import { MongoClient } from 'mongodb';
 import MeetupList from '../components/meetups/MeetupList';
 
 const imageLink =
@@ -15,14 +16,14 @@ const DUMMY_MEETUPS = [
     description: 'This a first meetup',
   },
   {
-    id: 'm1',
+    id: 'm2',
     title: 'A Second Meetup',
     image: imageLink2,
     address: '35 National Highway, Quezon, San Isidro, Isabela',
     description: 'This a second meetup',
   },
   {
-    id: 'm1',
+    id: 'm3',
     title: 'A Third Meetup',
     image: imageLink3,
     address: '35 National Highway, Quezon, San Isidro, Isabela',
@@ -41,6 +42,9 @@ const HomePage = (props) => {
 };
 
 export function getStaticProps() {
+
+    
+
     return {
         props: {
             meetups: DUMMY_MEETUPS
