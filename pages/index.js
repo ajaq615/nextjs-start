@@ -32,39 +32,44 @@ const DUMMY_MEETUPS = [
 ];
 
 const HomePage = (props) => {
- 
+  const isEmpty = JSON.stringify(props.meetups) === '{}';
+  console.log(isEmpty);
   return (
     <>
       <h1>Home Page</h1>
-      <MeetupList meetups={props.meetups} />
+      {isEmpty ? (
+        <h2>No meetups found!</h2>
+      ) : (
+        <MeetupList meetups={props.meetups} />
+      )}
+      {/* <MeetupList meetups={props.meetups} /> */}
     </>
   );
 };
 
 export async function getStaticProps() {
+  const client = await MongoClient.connect(
+    'mongodb+srv://ajquidasol615:AjaBoy615@cluster0.03hsvqo.mongodb.net/meetups?retryWrites=true&w=majority'
+  );
+  const db = client.db();
 
-    const client = await MongoClient.connect(
-        'mongodb+srv://ajquidasol615:AjaBoy615@cluster0.03hsvqo.mongodb.net/meetups?retryWrites=true&w=majority'
-      );
-      const db = client.db();
+  const meetupsCollection = db.collection('meetups');
 
-      const meetupsCollection = db.collection('meetups');
-    
-    const meetups = await meetupsCollection.find().toArray();
-    
-    client.close();
+  const meetups = await meetupsCollection.find().toArray();
 
-    return {
-        props: {
-            meetups: meetups.map((meetup) => ({
-                title: meetup.data.title,
-                address: meetup.data.address,
-                image: meetup.data.image,
-                id: meetup._id.toString(),
-            }))
-        },
-        revalidate: 10,
-    }
+  client.close();
+
+  return {
+    props: {
+      meetups: meetups.map((meetup) => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        id: meetup._id.toString(),
+      })),
+    },
+    revalidate: 10,
+  };
 }
 
 // export const getServerSideProps = (context) => {
